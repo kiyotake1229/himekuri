@@ -1,0 +1,17 @@
+{
+  "name": "じぶん日めくり",
+  "short_name": "日めくり",
+  "description": "自分で作る日めくりカレンダー。言葉や写真をカードにしておくと、毎朝1枚めくれる。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ebe6dc",
+  "theme_color": "#ebe6dc",
+  "orientation": "portrait",
+  "lang": "ja",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

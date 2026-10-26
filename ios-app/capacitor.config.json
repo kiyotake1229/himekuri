@@ -1,0 +1,15 @@
+{
+  "appId": "work.ltv.himekuri",
+  "appName": "じぶん日めくり",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#ebe6dc"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#c8452c"
+    }
+  }
+}
