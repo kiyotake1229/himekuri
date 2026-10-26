@@ -19,7 +19,7 @@ Webアプリ本体（`../index.html`）をネイティブiOSアプリとして�
 | ウィジェット拡張（`HimekuriWidget`） | Xcodeプロジェクトに組み込み済み（`ios/App/Widget/`） |
 | App Group（`group.work.ltv.himekuri`） | App と Widget の entitlements に設定済み |
 | `pod install` | **未実行**（この Mac に Xcode が無いため。Xcode のある環境で `npx cap sync ios`） |
-| ビルド確認 | **未実施**。GitHub に push すると `.github/workflows/ios-build.yml` が macOS ランナーで確認する |
+| ビルド確認 | **済み**（2026-10-27、GitHub Actions / Xcode 26.6 / 署名なし。シミュレータ Debug・実機 Release の両方、`HimekuriWidget.appex` の埋め込みまで）。push のたびに `.github/workflows/ios-build.yml` が再確認する |
 
 ---
 

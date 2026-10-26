@@ -1,8 +1,18 @@
 {
-  "next_no": 2,
-  "total": 1,
-  "generated_at": "2026-10-27T00:12:02.389167",
+  "next_no": 3,
+  "total": 2,
+  "generated_at": "2026-10-27T03:51:33.496578",
   "documents": [
+    {
+      "no": 2,
+      "date": "2026-10-27",
+      "type": "DPL",
+      "category": "IOS",
+      "title": "GitHubリポジトリ作成とActionsビルド確認",
+      "filename": "20261027_DPL_0002_IOS_GitHubリポジトリ作成とActionsビルド確認.md",
+      "extension": "md",
+      "summary": "この Mac に Xcode が無いため、GitHub にリポジトリ `kiyotake1229/himekuri` を作って push し、GitHub Actions の macOS ランナーで iOS のビルドが通ることを確認した。ウィジェット拡張（`HimekuriWidget.appex`）を含めて、シミュレータ向け Debug と実機向け Release の両方が成功。"
+    },
     {
       "no": 1,
       "date": "2026-10-27",

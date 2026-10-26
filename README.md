@@ -4,9 +4,10 @@
 
 | 項目 | 内容 |
 |---|---|
-| 状態 | **Web版・PWA版は完成。iOS版はプロジェクト構築済み（ビルド確認はまだ）** |
+| 状態 | **Web版・PWA版は完成。iOS版は GitHub Actions（Xcode 26.6）でビルド確認済み** |
 | 動作確認URL | https://claude.ai/artifact/Q6EnVGFaVE8Y4HtQcZW8vF （Claude Artifact。共有設定した人だけ開ける） |
-| GitHub Pages | 未作成（リポジトリを作ったら `https://kiyotake1229.github.io/himekuri/` の予定） |
+| GitHub | https://github.com/kiyotake1229/himekuri （2026-10-27 作成。**非公開**。公開にすると Actions の macOS 時間が無料になり、GitHub Pages も使える） |
+| GitHub Pages | 未公開（公開リポジトリにしてから `https://kiyotake1229.github.io/himekuri/` で配信する予定） |
 | 本体 | `index.html`（約78KB） |
 | 通信 | なし（完全オフライン） |
 | データ | 端末内のみ（localStorage。写真は IndexedDB。iOS版はネイティブ保存と App Group にも複製） |
@@ -24,13 +25,14 @@
 - PWA（ホーム画面に追加してオフラインで動く）
 - iOS プロジェクト一式。Capacitor 本体＋ウィジェット拡張（Swift）を Xcode プロジェクトに組み込み済み
 
+- iOS のビルド確認（2026-10-27、GitHub Actions の macOS ランナー、Xcode 26.6）。シミュレータ向け Debug と実機向け Release の両方が通り、`App.app/PlugIns/HimekuriWidget.appex` が入ることまで確認済み（https://github.com/kiyotake1229/himekuri/actions/runs/40347352329 ）
+
 残っていること
 
-1. **iOS のビルド確認**。この Mac には Xcode が無い。GitHub にリポジトリを作って push すれば `.github/workflows/ios-build.yml` が macOS ランナーで確認する（他のアプリと同じやり方）
-2. `ios-app/` で `npm run icons`（アイコン・起動画面の生成）と `npx cap sync ios`（pod install）。Xcode のある環境で
-3. 実機でウィジェットの表示を確認（ホーム画面 小・中・大、ロック画面 長方形・1行・丸）
-4. GitHub Pages の公開（App Store のサポートURL用）
-5. App Store 用スクリーンショット
+1. `ios-app/` で `npm run icons`（アイコン・起動画面の生成）。Xcode のある環境で
+2. 実機でウィジェットの表示を確認（ホーム画面 小・中・大、ロック画面 長方形・1行・丸）
+3. リポジトリを公開にして GitHub Pages を出す（App Store のサポートURL用）
+4. App Store 用スクリーンショット
 
 ---
 
@@ -46,7 +48,7 @@
 ## 岩崎さんへ
 
 iOS 版のビルド・申請手順は **[ios-app/岩崎さんへの引き渡し手順.md](ios-app/岩崎さんへの引き渡し手順.md)** にまとめてあります。
-ただし、**ビルドが通ることの確認がまだ**です（上記「残っていること」の1）。確認が済んだらこの README を更新します。
+ビルドが通ることは GitHub Actions（Xcode 26.6）で確認済みです。
 
 ---
 
