@@ -45,7 +45,7 @@
 
 | 環境 | URL |
 |------|-----|
-| リポジトリ | https://github.com/kiyotake1229/himekuri （非公開） |
+| リポジトリ | https://github.com/kiyotake1229/himekuri （作成時は非公開。#0003 で公開に変更） |
 | Actions | https://github.com/kiyotake1229/himekuri/actions |
 | 本番（GitHub Pages） | 未公開 |
 

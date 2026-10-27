@@ -4,10 +4,10 @@
 
 | 項目 | 内容 |
 |---|---|
-| 状態 | **Web版・PWA版は完成。iOS版は GitHub Actions（Xcode 26.6）でビルド確認済み** |
-| 動作確認URL | https://claude.ai/artifact/Q6EnVGFaVE8Y4HtQcZW8vF （Claude Artifact。共有設定した人だけ開ける） |
-| GitHub | https://github.com/kiyotake1229/himekuri （2026-10-27 作成。**非公開**。公開にすると Actions の macOS 時間が無料になり、GitHub Pages も使える） |
-| GitHub Pages | 未公開（公開リポジトリにしてから `https://kiyotake1229.github.io/himekuri/` で配信する予定） |
+| 状態 | **Web版は GitHub Pages で公開中。iOS版は GitHub Actions（Xcode 26.6）でビルド確認済み** |
+| Web公開（サポートURL） | https://kiyotake1229.github.io/himekuri/ |
+| 開発中の確認 | https://claude.ai/artifact/Q6EnVGFaVE8Y4HtQcZW8vF （Claude Artifact。共有設定した人だけ開ける） |
+| GitHub | https://github.com/kiyotake1229/himekuri （公開リポジトリ。`main` のルートを GitHub Pages で配信） |
 | 本体 | `index.html`（約78KB） |
 | 通信 | なし（完全オフライン） |
 | データ | 端末内のみ（localStorage。写真は IndexedDB。iOS版はネイティブ保存と App Group にも複製） |
@@ -31,8 +31,7 @@
 
 1. `ios-app/` で `npm run icons`（アイコン・起動画面の生成）。Xcode のある環境で
 2. 実機でウィジェットの表示を確認（ホーム画面 小・中・大、ロック画面 長方形・1行・丸）
-3. リポジトリを公開にして GitHub Pages を出す（App Store のサポートURL用）
-4. App Store 用スクリーンショット
+3. App Store 用スクリーンショット
 
 ---
 
@@ -81,4 +80,5 @@ iOS 版のビルド・申請手順は **[ios-app/岩崎さんへの引き渡し�
 ## 修正したいとき
 
 `index.html` を直す → `ios-app/` で `npm run sync` → Xcode で再ビルド。
+Web版（GitHub Pages）は `index.html` を push すれば数十秒で更新される。`sw.js` のキャッシュ名（`himekuri-v1`）も上げると、入れ替わりが確実になる。
 Artifact は Claude から同じファイルを公開し直す。
