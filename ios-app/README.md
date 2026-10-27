@@ -32,6 +32,7 @@ ios-app/
 ├── sync-web.sh               ../のWebアプリを www/ にコピー（sw.js は除く）
 ├── assets/                   アイコン・起動画面の元画像
 ├── tools/add-widget-target.rb  Xcodeプロジェクトにウィジェット拡張を組み込むスクリプト（実行済み）
+├── screenshots/              App Store 用スクリーンショット（../tools/make-screenshots.mjs で生成）
 ├── www/                      同梱するWeb資産（自動生成・git管理外）
 └── ios/App/
     ├── App.xcworkspace       ← これを開く（pod install 後にできる）

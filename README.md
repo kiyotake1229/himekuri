@@ -27,11 +27,12 @@
 
 - iOS のビルド確認（2026-10-27、GitHub Actions の macOS ランナー、Xcode 26.6）。シミュレータ向け Debug と実機向け Release の両方が通り、`App.app/PlugIns/HimekuriWidget.appex` が入ることまで確認済み（https://github.com/kiyotake1229/himekuri/actions/runs/40347352329 ）
 
+- App Store 用スクリーンショット（6場面 × 4サイズ）: `ios-app/screenshots/`。`node tools/make-screenshots.mjs` で作り直せる
+
 残っていること
 
 1. `ios-app/` で `npm run icons`（アイコン・起動画面の生成）。Xcode のある環境で
 2. 実機でウィジェットの表示を確認（ホーム画面 小・中・大、ロック画面 長方形・1行・丸）
-3. App Store 用スクリーンショット
 
 ---
 
@@ -71,9 +72,11 @@ iOS 版のビルド・申請手順は **[ios-app/岩崎さんへの引き渡し�
   icon.svg                  アイコン元データ
   icon-192.png / icon-512.png / icon-512-maskable.png / apple-touch-icon.png
   docs/                     開発ドキュメント
+  tools/make-screenshots.mjs  App Store 用スクリーンショットを作る（台紙: tools/screenshot-frame.html。要 Node.js 22 以降と Chrome）
   ios-app/                  iOSプロジェクト（Capacitor + WidgetKit）
     岩崎さんへの引き渡し手順.md
     README.md               開発者向けメモ
+    screenshots/            App Store 用スクリーンショット（iphone-6.9 / 6.7 / 6.5 / 5.5）
   .github/workflows/ios-build.yml   GitHub でのビルド確認（push で動く）
 ```
 

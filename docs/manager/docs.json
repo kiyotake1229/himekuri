@@ -1,15 +1,25 @@
 {
-  "next_no": 4,
-  "total": 3,
-  "generated_at": "2026-10-27T15:08:06.636809",
+  "next_no": 5,
+  "total": 4,
+  "generated_at": "2026-10-27T15:44:26.486546",
   "documents": [
+    {
+      "no": 4,
+      "date": "2026-10-27",
+      "type": "DOC",
+      "category": "IOS",
+      "title": "App_Store用スクリーンショット",
+      "filename": "20261027_DOC_0004_IOS_App_Store用スクリーンショット.md",
+      "extension": "md",
+      "summary": "App Store Connect に載せるスクリーンショットを、見出し入りで 6場面 × 4サイズ（iPhone 6.9 / 6.7 / 6.5 / 5.5インチ）作った。暗転・凪の池と同じ仕組み（Node.js から Chrome を画面なしで動かし、台紙 HTML の中でアプリに保存データを仕込んで撮る）。あわせて、縦書きの本文が紙の上に寄っていたのを中央に直した（軽微な修正）。"
+    },
     {
       "no": 3,
       "date": "2026-10-27",
       "type": "DPL",
       "category": "PWA",
-      "title": "リポジトリ公開とGitHubPages配信",
-      "filename": "20261027_DPL_0003_PWA_リポジトリ公開とGitHubPages配信.md",
+      "title": "リポジトリ公開とGitHubPages配信",
+      "filename": "20261027_DPL_0003_PWA_リポジトリ公開とGitHubPages配信.md",
       "extension": "md",
       "summary": "`kiyotake1229/himekuri` を非公開から公開に切り替え、`main` ブランチのルートを GitHub Pages で配信した。Web版（PWA）の一般公開URLであり、App Store 申請のサポートURLとして使う。"
     },
