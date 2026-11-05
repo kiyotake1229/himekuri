@@ -83,5 +83,5 @@ iOS 版のビルド・申請手順は **[ios-app/岩崎さんへの引き渡し�
 ## 修正したいとき
 
 `index.html` を直す → `ios-app/` で `npm run sync` → Xcode で再ビルド。
-Web版（GitHub Pages）は `index.html` を push すれば数十秒で更新される。`sw.js` のキャッシュ名（`himekuri-v1`）も上げると、入れ替わりが確実になる。
+Web版（GitHub Pages）は `index.html` を push すれば数十秒で更新される。`sw.js` は本体を「ネット優先」で取るので、ホーム画面に追加した人にも次に開いたときに届く（アイコンなどを変えたときだけ `sw.js` のキャッシュ名を上げる）。
 Artifact は Claude から同じファイルを公開し直す。

@@ -69,7 +69,7 @@ header.top{padding:calc(14px + var(--safe-t)) 20px 6px;display:flex;align-items:
 
 /* ---------- 今日：日めくりの台 ---------- */
 .pad-wrap{padding:6px 10px 0}
-.pad{position:relative;height:min(62vh,520px);min-height:380px;perspective:1200px}
+.pad{position:relative;height:min(56vh,500px);min-height:360px;perspective:1200px}
 .sheet{
   position:absolute;inset:0;border-radius:18px;background:var(--paper);color:var(--ink);
   box-shadow:0 18px 40px rgba(40,30,10,.18),0 2px 4px rgba(40,30,10,.08);
@@ -305,7 +305,7 @@ input[type="time"]{border:none;background:var(--ui2);border-radius:10px;padding:
   .sheet-text{font-size:calc(24px * var(--fs))}
 }
 @media (max-height:700px){
-  .pad{min-height:340px}
+  .pad{min-height:330px}
   .sheet-date .day{font-size:calc(52px * var(--fs))}
 }
 @media (prefers-reduced-motion:reduce){
@@ -405,7 +405,7 @@ input[type="time"]{border:none;background:var(--ui2);border-radius:10px;padding:
 
       <div class="group">
         <h3>めくり方</h3>
-        <div class="row"><div class="lb">出す順<small>記念日と曜日のカードはその日に必ず出ます</small></div><div class="seg" id="modeSeg" style="width:170px"><button data-v="random">おまかせ</button><button data-v="order">順番</button></div></div>
+        <div class="row"><div class="lb">出す順<small>記念日と曜日のカードはその日に必ず出ます。「順番」は、カードを足したり消したりすると並びが変わります</small></div><div class="seg" id="modeSeg" style="width:170px"><button data-v="random">おまかせ</button><button data-v="order">順番</button></div></div>
         <div class="row"><div class="lb">紙の音</div><button class="switch" id="soundSw"></button></div>
         <div class="row"><div class="lb">振動</div><button class="switch" id="hapticSw"></button></div>
       </div>
@@ -680,10 +680,11 @@ async function syncWidget(){
     cards:state.cards.map(c=>({id:c.id,text:c.text,sub:c.sub,kind:c.kind,date:c.date,wdays:c.wdays,order:c.order,img:!!IMG[c.id]})),
     notes:state.notes,overrides:state.overrides,
     settings:{mode:state.settings.mode,paper:state.settings.paper,font:state.settings.font,accent:state.settings.accent,seed:state.settings.seed}};
-  try{await Widget.setData({json:JSON.stringify(payload)});}catch(e){}
-  if(!state.meta.widgetFull){ // 初回は写真も全部送る
-    for(const c of state.cards){ if(IMG[c.id]){ try{await Widget.saveImage({id:c.id,base64:await shrink(IMG[c.id],600,.72).then(u=>u.split(',')[1])});}catch(e){} } }
-    state.meta.widgetFull=true; try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+  let ok=true;
+  try{await Widget.setData({json:JSON.stringify(payload)});}catch(e){ok=false;}
+  if(ok&&!state.meta.widgetFull){ // 初回は写真も全部送る。全部成功したときだけ「済み」にする
+    for(const c of state.cards){ if(IMG[c.id]){ try{await Widget.saveImage({id:c.id,base64:await shrink(IMG[c.id],600,.72).then(u=>u.split(',')[1])});}catch(e){ok=false;} } }
+    if(ok){state.meta.widgetFull=true; try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
   }
 }
 
@@ -781,9 +782,16 @@ function tearTo(nextFn){
   el.classList.add('tearing');playTear();haptic('MEDIUM');
   setTimeout(()=>{el.classList.remove('tearing');el.style.transform='';nextFn();tearing=false;},620);
 }
+function fitsToday(c,ds){ // 今日に出してよいカードか（記念日・曜日のカードは、その日だけ）
+  if(c.kind==='date')return c.date===ds.slice(5);
+  if(c.kind==='wday')return (c.wdays||[]).includes(weekdayOf(ds));
+  return true;
+}
 function redraw(){
   const ds=todayStr();if(state.cards.length<2)return;
-  const cur=pickFor(ds);const rest=state.cards.filter(c=>!cur||c.id!==cur.id);const nx=rest[Math.floor(Math.random()*rest.length)];
+  const cur=pickFor(ds);let rest=state.cards.filter(c=>(!cur||c.id!==cur.id)&&fitsToday(c,ds));
+  if(!rest.length)rest=state.cards.filter(c=>!cur||c.id!==cur.id);
+  const nx=rest[Math.floor(Math.random()*rest.length)];
   state.overrides[ds]=nx.id;state.shown[ds]=nx.id;
   if(state.meta.hintShown<5)state.meta.hintShown++;
   save();tearTo(()=>renderToday('appear'));
@@ -860,9 +868,15 @@ function renderCards(){
 }
 function buildPickers(){
   $('#cMonth').innerHTML=Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
-  $('#cDay').innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+  buildDayOptions(1);
+  $('#cMonth').addEventListener('change',()=>buildDayOptions(+$('#cMonth').value));
   $('#cWdays').innerHTML=WD.map((w,i)=>`<button data-w="${i}">${w}</button>`).join('');
   $$('#cWdays button').forEach(b=>b.addEventListener('click',()=>{const w=+b.dataset.w;const i=editWdays.indexOf(w);if(i>=0)editWdays.splice(i,1);else editWdays.push(w);editWdays.sort();b.classList.toggle('on',i<0);haptic('LIGHT');}));
+}
+function buildDayOptions(month){ // 2月は29日まで（うるう年の分）、30日の月は30日まで
+  const n=daysInMonth(2024,month);const sel=$('#cDay');const cur=+sel.value||1;
+  sel.innerHTML=Array.from({length:n},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+  sel.value=Math.min(cur,n);
 }
 function setKind(k){$$('#kindSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===k));$('#kindDate').hidden=k!=='date';$('#kindWday').hidden=k!=='wday';}
 $$('#kindSeg button').forEach(b=>b.addEventListener('click',()=>setKind(b.dataset.v)));
@@ -872,7 +886,7 @@ function openCard(id){
   $('#cardModalTitle').textContent=c?'カードを編集':'カードを追加';$('#cardModalSub').textContent=c?'':`${state.cards.length+1}枚目`;
   $('#cText').value=c?c.text:'';$('#cSub').value=c?c.sub:'';$('#cCount').textContent=`${[...$('#cText').value].length}/300`;
   setKind(c?c.kind:'any');
-  const [mm,dd]=(c&&c.date?c.date:'01-01').split('-').map(Number);$('#cMonth').value=mm;$('#cDay').value=dd;
+  const [mm,dd]=(c&&c.date?c.date:'01-01').split('-').map(Number);$('#cMonth').value=mm;buildDayOptions(mm);$('#cDay').value=dd;
   editWdays=c?(c.wdays||[]).slice():[];$$('#cWdays button').forEach(b=>b.classList.toggle('on',editWdays.includes(+b.dataset.w)));
   setImgPreview(c?IMG[c.id]:null);
   $('#cDel').hidden=!c;

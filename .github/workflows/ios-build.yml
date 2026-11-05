@@ -14,6 +14,8 @@ on:
       - "icon-*.png"
       - "apple-touch-icon.png"
       - "ios-app/**"
+      - "!ios-app/**/*.md"
+      - "!ios-app/screenshots/**"
       - ".github/workflows/ios-build.yml"
   workflow_dispatch:
 
