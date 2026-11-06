@@ -1,8 +1,18 @@
 {
-  "next_no": 8,
-  "total": 7,
-  "generated_at": "2026-11-06T15:08:11.140543",
+  "next_no": 9,
+  "total": 8,
+  "generated_at": "2026-11-06T15:45:14.854369",
   "documents": [
+    {
+      "no": 8,
+      "date": "2026-11-06",
+      "type": "FIX",
+      "category": "IOS",
+      "title": "許可のダイアログなどを日本語で出す",
+      "filename": "20261106_FIX_0008_IOS_許可のダイアログなどを日本語で出す.md",
+      "extension": "md",
+      "summary": "iOS アプリの言語の設定が英語（`CFBundleDevelopmentRegion = en`。`npx cap add ios` で作ったときのまま）だった。そのため日本語の iPhone でも、通知や写真の許可を求めるダイアログ、共有シートなど、iOS が出す文言が英語で出るおそれがあった。設定を日本語（`ja`）にし、対応言語も日本語（`CFBundleLocalizations = ["
+    },
     {
       "no": 7,
       "date": "2026-11-06",

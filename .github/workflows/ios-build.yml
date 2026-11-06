@@ -117,6 +117,8 @@ jobs:
           ID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist")
           [ "$ID" = "work.ltv.himekuri" ] || { echo "::error::Bundle ID が違います: $ID"; exit 1; }
           [ "$(/usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" "$APP/Info.plist")" = "false" ] || { echo "::error::ITSAppUsesNonExemptEncryption が false ではありません"; exit 1; }
+          [ "$(/usr/libexec/PlistBuddy -c "Print :CFBundleDevelopmentRegion" "$APP/Info.plist")" = "ja" ] || { echo "::error::CFBundleDevelopmentRegion が ja ではありません（許可のダイアログなどが英語で出る）"; exit 1; }
+          /usr/libexec/PlistBuddy -c "Print :CFBundleLocalizations" "$APP/Info.plist" | grep -q "^ *ja$" || { echo "::error::CFBundleLocalizations に ja がありません"; exit 1; }
           echo "表示名: $(/usr/libexec/PlistBuddy -c "Print :CFBundleDisplayName" "$APP/Info.plist")"
           test -d "$APP/PlugIns/HimekuriWidget.appex" || { echo "::error::ウィジェット拡張（PlugIns/HimekuriWidget.appex）が入っていません"; exit 1; }
           WID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/HimekuriWidget.appex/Info.plist")
