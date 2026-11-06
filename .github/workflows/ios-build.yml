@@ -1,6 +1,7 @@
 # iOS のビルド確認（署名なし）。手元に Xcode が無いため、GitHub の macOS ランナーで
 # npm ci → www/ へコピー → cap sync（pod install）→ xcodebuild が通ることを確かめる。
 # ウィジェット拡張（HimekuriWidget.appex）が App.app/PlugIns に入ることまで確認する。
+# あわせて、App Store のアップロードで見られる申告（プライバシーマニフェスト・暗号化）がアプリに入っていることを確かめる。
 # App Store への申請には使わない（申請は Xcode の Archive で行う。ios-app/岩崎さんへの引き渡し手順.md）。
 # Xcode は 26 で確かめる（Capacitor 7 は UIScene 未対応のため、Xcode 27 の SDK ではビルドしない）。
 name: iOS build check
@@ -80,6 +81,8 @@ jobs:
           grep -q "PRODUCT_BUNDLE_IDENTIFIER = work.ltv.himekuri;" ios/App/App.xcodeproj/project.pbxproj || { echo "::error::Bundle ID が work.ltv.himekuri ではありません"; exit 1; }
           grep -q "PRODUCT_BUNDLE_IDENTIFIER = work.ltv.himekuri.widget;" ios/App/App.xcodeproj/project.pbxproj || { echo "::error::ウィジェットの Bundle ID がありません"; exit 1; }
           plutil -lint ios/App/App/Info.plist ios/App/Widget/Info.plist
+          plutil -lint ios/App/App/PrivacyInfo.xcprivacy
+          grep -q "PrivacyInfo.xcprivacy in Resources" ios/App/App.xcodeproj/project.pbxproj || { echo "::error::PrivacyInfo.xcprivacy がアプリ（App ターゲットの Resources）に入っていません"; exit 1; }
           test -d ios/App/Pods || { echo "::error::pod install が行われていません"; exit 1; }
 
       - name: Build for iOS Simulator (Debug, no signing)
@@ -113,6 +116,7 @@ jobs:
           if [ -e "$APP/public/sw.js" ]; then echo "::error::sw.js が入っています"; exit 1; fi
           ID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist")
           [ "$ID" = "work.ltv.himekuri" ] || { echo "::error::Bundle ID が違います: $ID"; exit 1; }
+          [ "$(/usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" "$APP/Info.plist")" = "false" ] || { echo "::error::ITSAppUsesNonExemptEncryption が false ではありません"; exit 1; }
           echo "表示名: $(/usr/libexec/PlistBuddy -c "Print :CFBundleDisplayName" "$APP/Info.plist")"
           test -d "$APP/PlugIns/HimekuriWidget.appex" || { echo "::error::ウィジェット拡張（PlugIns/HimekuriWidget.appex）が入っていません"; exit 1; }
           WID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/PlugIns/HimekuriWidget.appex/Info.plist")
@@ -125,6 +129,38 @@ jobs:
           for fw in Capacitor CapacitorApp CapacitorHaptics CapacitorLocalNotifications CapacitorPreferences; do
             test -d "$APP/Frameworks/$fw.framework" || { echo "::error::$fw.framework がありません"; exit 1; }
           done
+
+      - name: Check privacy manifest
+        run: |
+          set -euo pipefail
+          # アプリの中に PrivacyInfo.xcprivacy があり、トラッキングなし・収集データなし、
+          # 使っている部品に合わせた「理由の申告が要る API」が書いてあること（足りないとアップロードで ITMS-91053 になる）
+          APP="$RUNNER_TEMP/dd/Build/Products/Release-iphoneos/App.app"
+          test -f "$APP/PrivacyInfo.xcprivacy" || { echo "::error::App.app に PrivacyInfo.xcprivacy が入っていません"; exit 1; }
+          plutil -lint "$APP/PrivacyInfo.xcprivacy"
+          python3 - "$APP" <<'CHECK'
+          import os, plistlib, sys
+          app = sys.argv[1]
+          d = plistlib.load(open(os.path.join(app, "PrivacyInfo.xcprivacy"), "rb"))
+          err = []
+          if d.get("NSPrivacyTracking") is not False: err.append("NSPrivacyTracking が false ではありません")
+          if d.get("NSPrivacyTrackingDomains"): err.append("NSPrivacyTrackingDomains が空ではありません")
+          if d.get("NSPrivacyCollectedDataTypes"): err.append("NSPrivacyCollectedDataTypes が空ではありません（App Store の「データを収集しません」と食い違う）")
+          api = {a.get("NSPrivacyAccessedAPIType"): a.get("NSPrivacyAccessedAPITypeReasons", []) for a in d.get("NSPrivacyAccessedAPITypes", [])}
+          for cat, reasons in api.items():
+              print(f"申告: {cat} {', '.join(reasons)}")
+          need = [("全アプリ共通", "NSPrivacyAccessedAPICategoryUserDefaults", "CA92.1")]
+          rules = {"CapacitorPreferences": ("NSPrivacyAccessedAPICategoryUserDefaults", "CA92.1"),
+                   "CapacitorFilesystem": ("NSPrivacyAccessedAPICategoryFileTimestamp", "C617.1")}
+          for fw, (cat, reason) in rules.items():
+              if os.path.isdir(os.path.join(app, "Frameworks", fw + ".framework")):
+                  need.append((fw, cat, reason))
+          for who, cat, reason in need:
+              if reason not in api.get(cat, []):
+                  err.append(f"{who} のために {cat}（{reason}）の申告が要ります")
+          for e in err: print("::error::" + e)
+          sys.exit(1 if err else 0)
+          CHECK
 
       - name: Show errors
         if: failure()

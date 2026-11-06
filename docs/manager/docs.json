@@ -1,8 +1,18 @@
 {
-  "next_no": 6,
-  "total": 5,
-  "generated_at": "2026-11-05T22:15:51.318807",
+  "next_no": 7,
+  "total": 6,
+  "generated_at": "2026-11-06T13:51:30.016611",
   "documents": [
+    {
+      "no": 6,
+      "date": "2026-11-06",
+      "type": "ENH",
+      "category": "IOS",
+      "title": "プライバシーマニフェストと暗号化の申告",
+      "filename": "20261106_ENH_0006_IOS_プライバシーマニフェストと暗号化の申告.md",
+      "extension": "md",
+      "summary": "App Store へのアップロードで求められる申告を iOS アプリにそろえた。プライバシーマニフェスト（`PrivacyInfo.xcprivacy`。トラッキングなし・収集データなし・「理由の申告が要る API」の利用理由）をアプリに入れ、暗号化を使っていない申告（`ITSAppUsesNonExemptEncryption = NO`）を足した。GitHub Actions のビルド確認（"
+    },
     {
       "no": 5,
       "date": "2026-11-05",

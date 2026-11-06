@@ -27,6 +27,8 @@
 
 - iOS のビルド確認（2026-10-27、GitHub Actions の macOS ランナー、Xcode 26.6）。シミュレータ向け Debug と実機向け Release の両方が通り、`App.app/PlugIns/HimekuriWidget.appex` が入ることまで確認済み（https://github.com/kiyotake1229/himekuri/actions/runs/40347352329 ）
 
+- App Store 用の申告: プライバシーマニフェスト（`ios-app/ios/App/App/PrivacyInfo.xcprivacy`）と暗号化の申告（`ITSAppUsesNonExemptEncryption = NO`）。GitHub Actions のビルド確認で、アプリに入っていることを毎回確かめる（docs #0006。2026-11-06 確認）
+
 - App Store 用スクリーンショット（6場面 × 4サイズ）: `ios-app/screenshots/`。`node tools/make-screenshots.mjs` で作り直せる
 
 残っていること
